@@ -1,0 +1,51 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: iperf-server-cnseries
+  namespace: app-test-cnseries
+  labels:
+    app: iperf-server-cnseries
+  annotations:
+    paloaltonetworks.com/firewall: pan-fw
+    k8s.v1.cni.cncf.io/networks: pan-cni
+spec:
+  #hostNetwork: true #<--------- UNCOMMENT THIS SETTING IF THE IPERF POD MUST RUN IN THE HOST NETWORK
+  nodeName: worker01.ocp.local #<-------- REPLACE THIS WITH THE NODE WHERE IPERF SERVER MUST RUN
+  containers:
+  - name: server
+    image: quay.ocp.local:8443/ocp4/poc:iperf3-latest  #<---------- REPLACE THIS
+
+---
+
+apiVersion: v1
+kind: Pod
+metadata:
+  name: iperf-server-annotations
+  namespace: app-test-no-annotations
+  labels:
+    app: iperf-server-annotations
+#  annotations:
+#    paloaltonetworks.com/firewall: pan-fw
+#    k8s.v1.cni.cncf.io/networks: pan-cni
+spec:
+  #hostNetwork: true #<--------- UNCOMMENT THIS SETTING IF THE IPERF POD MUST RUN IN THE HOST NETWORK
+  nodeName: worker04.ocp.local #<-------- REPLACE THIS WITH THE NODE WHERE IPERF SERVER MUST RUN
+  containers:
+  - name: server
+    image: quay.ocp.local:8443/ocp4/poc:iperf3-latest  #<---------- REPLACE THIS
+
+---
+
+apiVersion: v1
+kind: Pod
+metadata:
+  name: iperf-client
+  namespace: app-test-no-annotations
+  labels:
+    app: iperf-client
+spec:
+  #hostNetwork: true #<--------- UNCOMMENT THIS SETTING IF THE IPERF POD MUST RUN IN THE HOST NETWORK
+  nodeName: worker02.ocp.local #<-------- REPLACE THIS WITH THE NODE WHERE IPERF CLIENT MUST RUN
+  containers:
+  - name: client
+    image: quay.ocp.local:8443/ocp4/poc:iperf3-latest  #<---------- REPLACE THIS
